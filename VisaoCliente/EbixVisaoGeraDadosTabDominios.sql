@@ -1,4 +1,4 @@
-set lines 200
+set lines 100
 set pages 0
 set head off
 
@@ -16,7 +16,6 @@ set head off
 -- POPULA - TB_TIPO_RISCO
 -- NÃO EXISTE EM WISGCICATU_PRD
 --
--- 06 - TB_LAYOUT_EMAIL     - coluna DS_LAYOUT_EMAIL     - CLOB - 0 linha
 --
 -- =======================================================================
 
@@ -70,12 +69,14 @@ spool Insert_TB_GRAU_PARENTESCO.sql
 spool off;
 
 -- 08 - POPULA - TB_LAYOUT_EMAIL
-SELECT 'INSERT INTO TB_LAYOUT_EMAIL (ID,DS_ASSUNTO,DS_LAYOUT_EMAIL,DS_TIPO_LAYOUT_EMAIL) VALUES ('||ID||','''||DS_ASSUNTO||''','''||DS_LAYOUT_EMAIL||''','''||DS_TIPO_LAYOUT_EMAIL||''');'
+set long 32767 
+SELECT 'INSERT INTO TB_LAYOUT_EMAIL (ID,DS_ASSUNTO,DS_LAYOUT_EMAIL,DS_TIPO_LAYOUT_EMAIL) VALUES ('||ID||','''||DS_ASSUNTO||''','''||dbms_lob.substr(DS_LAYOUT_EMAIL,4000,1)||''','''||DS_TIPO_LAYOUT_EMAIL||''');'
 FROM WISGCICATU_PRD.TB_LAYOUT_EMAIL
 .
 spool Insert_TB_LAYOUT_EMAIL.sql
 /
 spool off;
+set long 100
 
 -- 09 - POPULA - TB_MOTIVO_RECUSA
 SELECT 'INSERT INTO TB_MOTIVO_RECUSA (ID,NM_MOTIVO,DS_MOTIVO,PID_TIPO_MOTIVO_RECUSA) VALUES ('||ID||','''||NM_MOTIVO||''','''||DS_MOTIVO||''','||PID_TIPO_MOTIVO_RECUSA||');'
