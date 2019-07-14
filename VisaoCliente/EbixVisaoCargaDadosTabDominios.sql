@@ -10,11 +10,13 @@ DEFINE owner=DB_EXCHANGE_VISAO_TST
 set timing on
 alter session set current_schema=&owner;
 
-spool set timing on 
+set define off
 spool EbixVisaoCargaDadosTabDominios.log
 @Insert_TB_BANCO.sql
 commit;
 @Insert_TB_DIA_VENCIMENTO.sql
+commit;
+@Insert_TB_TIPO_MOTIVO_RECUSA.sql
 commit;
 @Insert_TB_ESTADO_CIVIL.sql
 commit;
@@ -22,11 +24,13 @@ commit;
 commit;
 @Insert_TB_FUNCIONALIDADE.sql
 commit;
-@Insert_TB_LAYOUT_EMAIL.sql
+@Insert_TB_GRAU_PARENTESCO.sql
 commit;
 @Insert_TB_MOTIVO_RECUSA.sql
 commit;
 @Insert_TB_OCUPACAO.sql
+commit;
+@Insert_TB_ORGAO_EMISSOR.sql
 commit;
 @Insert_TB_PAIS.sql
 commit;
@@ -56,7 +60,7 @@ commit;
 commit;
 @Insert_TB_TIPO_PORTABILIDADE.sql
 commit;
--- @Insert_TB_TIPO_PRODUTO.sql
+@Insert_TB_TIPO_PRODUTO.sql
 commit;
 @Insert_TB_TITULARIDADE.sql
 commit;
@@ -80,4 +84,7 @@ commit;
 commit;
 @Insert_TB_ARQ_STATUS_CARGA_LOG.sql
 commit;
+@Insert_TB_ARQUIVO_MOVI.sql
+commit;
 spool off
+exit

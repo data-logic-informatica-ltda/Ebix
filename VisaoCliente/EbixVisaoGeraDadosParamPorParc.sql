@@ -1,4 +1,4 @@
-set lines 100
+set lines 900
 set pages 0
 set head off
 
@@ -8,13 +8,6 @@ set head off
 -- Script de Geracao das Cargas de Tabelas Por Parceria
 -- Autor: Alexandre e Rogerio
 -- Favor informar antes de executar o script o schema que será usado para consultar as tabelas de dominio 
-
-/************************************
-*  INPUT PARAMETERS
-************************************/
-DEFINE owner=DB_EXCHANGE_VISAO_TST
-
-alter session set current_schema = &owner;
 
 -- 01 - POPULA - TB_EMPRESA e TB_EMPRESA_PARAMETRO
 SELECT '  INSERT INTO DB_EXCHANGE_VISAO_TST.TB_EMPRESA  ( ID ,    NM_EMPRESA,    DS_EMAIL,    FL_LICENSA_ATIVA,    NU_SUSEP,    DS_CAMINHO_LOGOTIPO,    NU_MUMPS,    NUM_CNPJ,    DG,    CD_PARCERIA,    NM_EMPRESA_FANTASIA,    NUM_TELEFONE,    NM_APELIDO,    SENHA,    LOGIN,    CD_XPORT,    NUM_FUNCAO,    USAR_SERVICO_ATIVO,    PID_EMPRESA_SECUNDARIA,
@@ -40,7 +33,7 @@ SELECT '  INSERT INTO DB_EXCHANGE_VISAO_TST.TB_EMPRESA  ( ID ,    NM_EMPRESA,   
 '||DECODE(E.PID_EMPRESA_SECUNDARIA, NULL, 'NULL', E.PID_EMPRESA_SECUNDARIA)||' ,
 '||DECODE(E.PID_EMPRESA_SUPERIOR, NULL, 'NULL', E.PID_EMPRESA_SUPERIOR)||' ,
 '||DECODE(E.PID_TIPO_EMPRESA, NULL, 'NULL',  E.PID_TIPO_EMPRESA)||' ,
-'||DECODE(E.NM_APELIDO, NULL, 'NULL', DECODE((SELECT U.ID FROM TB_USUARIO U WHERE U.LOGIN_USUARIO=E.NM_APELIDO AND ROWNUM=1), NULL, 'NULL',(SELECT U.ID FROM TB_USUARIO U WHERE U.LOGIN_USUARIO=E.NM_APELIDO AND ROWNUM=1)))    ||' ); ' ,
+'||DECODE(E.NM_APELIDO, NULL, 'NULL', DECODE((SELECT U.ID FROM WISGCICATU_PRD.TB_USUARIO U WHERE U.LOGIN_USUARIO=E.NM_APELIDO AND ROWNUM=1), NULL, 'NULL',(SELECT U.ID FROM WISGCICATU_PRD.TB_USUARIO U WHERE U.LOGIN_USUARIO=E.NM_APELIDO AND ROWNUM=1)))    ||' ); ' ,
 ' INSERT INTO TB_EMPRESA_PARAMETRO  (    ID,    PID_EMPRESA,    FL_HABILITA_PORTABILIDADE,    FL_HABILITA_BENEFICIARIO,    FL_HABILITA_RESP_FINANCEIRO,    DS_DISCLAIMER_BANCO,    DS_DISCLAIMER_PORT,    NU_IDADE_MAX_APOSENT,    FL_HABILITA_PGBL,    FL_HABILITA_VGBL,    FL_HABILITA_REGRESSIVA,    FL_HABILITA_PROGRESSIVA ) VALUES    ( 
   '||E.ID||',
     '||E.ID||',
@@ -159,7 +152,6 @@ SELECT 'INSERT INTO TB_ESTRUTURA_VENDA (
 FROM WISGCICATU_PRD.TB_ESTRUTURA_VENDA EV
 JOIN WISGCICATU_PRD.TB_EMPRESA E ON E.ID=EV.PID_EMPRESA
 WHERE E.ID=4
-FROM WISGCICATU_PRD.TB_GRAU_PARENTESCO
 .
 spool Insert_TB_ESTRUTURA_VENDA.sql
 /
@@ -186,8 +178,8 @@ SELECT ' INSERT INTO tb_usuario (    ID,    pid_empresa,    login_usuario,    ds
     '||DECODE(G.ID, NULL, 'NULL', G.ID)||'  ,     
     '||DECODE(UV.PID_VISAO, NULL, 'NULL', UV.PID_VISAO)||'  ,     
     ''S'' );'     
-FROM  WISGCICATU_PRDTB_USUARIO U
-JOIN WISGCICATU_PRDTB_EMPRESA E ON E.ID=U.PID_EMPRESA  
+FROM  WISGCICATU_PRD.TB_USUARIO U
+JOIN WISGCICATU_PRD.TB_EMPRESA E ON E.ID=U.PID_EMPRESA  
 left JOIN WISGCICATU_PRD.TB_USUARIO_PARAMETRIZACAO UP ON UP.PID_USUARIO=U.ID  
 left JOIN WISGCICATU_PRD.TB_ESTRUTURA_VENDA EV ON EV.PID_EMPRESA=U.PID_EMPRESA and   up.pid_estrutura_venda= ev.id 
 JOIN WISGCICATU_PRD.TB_CANAL_VENDA CV ON  CV.PID_EMPRESA=E.ID
@@ -220,7 +212,6 @@ JOIN WISGCICATU_PRD.TB_USUARIO_CANAL_VENDA UCV ON UCV.PID_USUARIO=U.ID AND UCV.P
 WHERE 1=1 
   AND E.ID=4
   order by DECODE(UCV.PID_CANAL_VENDA, NULL, 'NULL', UCV.PID_CANAL_VENDA),DECODE(UCV.PID_USUARIO, NULL, 'NULL', UCV.PID_USUARIO)
-FROM WISGCICATU_PRD.TB_MOTIVO_RECUSA
 .
 spool Insert_TB_USUARIO_CANAL_VENDA.sql
 /
@@ -242,7 +233,6 @@ join WISGCICATU_PRD.tb_cliente c on c.pid_endereco=en.id
 join WISGCICATU_PRD.tb_documento d on d.pid_cliente=c.id
 JOIN WISGCICATU_PRD.TB_EMPRESA E ON E.ID=d.PID_EMPRESA  
 where d.pid_empresa=4
-FROM WISGCICATU_PRD.TB_OCUPACAO
 .
 spool Insert_TB_ENDERECO.sql
 /
@@ -287,20 +277,17 @@ spool Insert_TB_CLIENTE.sql
 spool off;
 
 -- 12 - POPULA - TB_RESPONSAVEL_FINANCEIRO
-SELECT 'INSERT INTO tb_responsavel_financeiro (    id,    nome,    num_cpf,    pid_cliente,    dt_nascimento,    ds_email) 
-VALUES (    '||R.ID||',
-   '||DECODE(r.nome, NULL, 'NULL', ''''||r.nome||'''')||'  ,         
-   '||DECODE(r.num_cpf, NULL, 'NULL', ''''||r.num_cpf||'''')||'  ,       
-   '||DECODE(r.pid_cliente, NULL, 'NULL', r.pid_cliente)||'  ,      
-   '||DECODE(r.dt_nascimento, NULL, 'NULL', ''''||r.dt_nascimento||'''')||'  ,         
-   '||DECODE(r.ds_email, NULL, 'NULL', ''''||r.ds_email||'''')||'           
-);' from WISGCICATU_PRD.TB_RESPONSAVEL_FINANCEIRO r
+SELECT 'INSERT INTO tb_responsavel_financeiro (    id,    nome,    num_cpf,    pid_cliente,    dt_nascimento,    ds_email) VALUES (    '||R.ID||', '||
+        DECODE(r.nome, NULL, 'NULL', ''''||r.nome||'''')||'  ,         '||DECODE(r.num_cpf, NULL, 'NULL', ''''||r.num_cpf||'''')||'  ,       '||
+        DECODE(r.pid_cliente, NULL, 'NULL', r.pid_cliente)||'  ,      '||DECODE(r.dt_nascimento, NULL, 'NULL', ''''||r.dt_nascimento||'''')||'  ,         '||
+        DECODE(r.ds_email, NULL, 'NULL', ''''||r.ds_email||'''')||'           );' 
+from WISGCICATU_PRD.TB_RESPONSAVEL_FINANCEIRO r
 join WISGCICATU_PRD.TB_CLIENTE c  on c.id=r.pid_cliente
 join WISGCICATU_PRD.tb_documento d on d.pid_cliente=c.id
 JOIN WISGCICATU_PRD.TB_EMPRESA E ON E.ID=d.PID_EMPRESA  
 where d.pid_empresa=4
 .
-spool Insert_TB_CLIENTE.sql
+spool Insert_TB_RESPONSAVEL_FINANCEIRO.sql
 /
 spool off;
 
@@ -326,18 +313,8 @@ spool Insert_TB_RESPONSAVEL_LEGAL.sql
 spool off;
 
 -- 14  - POPULA - TB_NIF
-SELECT 'INSERT  tb_nif (
-    id,
-    num_nif,
-    pid_pais,
-    pid_cliente,
-    pid_motivo_nif
-) VALUES (
-   '||n.ID||',
-   '||DECODE(n.num_nif, NULL, 'NULL', ''''||n.num_nif||'''')||'     ,   
-   '||DECODE(n.pid_pais, NULL, 'NULL', n.pid_pais)||'  ,   
-   '||DECODE(n.pid_cliente, NULL, 'NULL', n.pid_cliente)||'  ,  NULL 
-);'
+SELECT 'INSERT  tb_nif ( id, num_nif, pid_pais, pid_cliente, pid_motivo_nif) VALUES ('||n.ID||','||DECODE(n.num_nif, NULL, 'NULL', ''''||n.num_nif||'''')||'     ,   '||
+        DECODE(n.pid_pais, NULL, 'NULL', n.pid_pais)||'  ,   '||DECODE(n.pid_cliente, NULL, 'NULL', n.pid_cliente)||'  ,  NULL );'
 from WISGCICATU_PRD.TB_NIF n
 join WISGCICATU_PRD.TB_CLIENTE c  on c.id=n.pid_cliente
 join WISGCICATU_PRD.tb_documento d on d.pid_cliente=c.id
@@ -369,16 +346,6 @@ VL_CONTRIBUICAO,COR)values(
         '||VL_CONTR_MIN||' ,
         null 
         );',
-
-PID_PRODUTO,
-PID_EMPRESA,
-NM_FUNDO_REDUZIDO as NM_INVESTIMENTO ,
-CD_FUNDO_SEG,
-VL_APORTE_MIN as VL_APORTE,
-VL_CONTR_MIN as VL_CONTRIBUICAO,
-FL_APORTE_OBRIG,
-FL_CONTRIB_OBRIG,
-FL_ATIVO
 from  WISGCICATU_PRD.TB_FUNDO WHERE PID_EMPRESA=4 order by id 
 .
 spool Insert_TB_INVESTIMENTO.sql
@@ -394,16 +361,7 @@ SELECT 'INSERT INTO TB_FUNDO   (  NM_FUNDO,    ID,    VL_TAF,    NU_CNPJ,    CD_
       '||NU_CNPJ||', 
     '''||CD_FUNDO_SEG||''',
     '''|| NM_FUNDO_REDUZIDO||''' 
-  );',
-PID_PRODUTO,
-PID_EMPRESA,
-NM_FUNDO_REDUZIDO as NM_INVESTIMENTO ,
-CD_FUNDO_SEG,
-VL_APORTE_MIN as VL_APORTE,
-VL_CONTR_MIN as VL_CONTRIBUICAO,
-FL_APORTE_OBRIG,
-FL_CONTRIB_OBRIG,
-FL_ATIVO, vl_taf
+  );'
 from WISGCICATU_PRD.TB_FUNDO f WHERE f.PID_EMPRESA =4   order by id
 .
 spool Insert_TB_FUNDO.sql
@@ -471,22 +429,16 @@ join WISGCICATU_PRD.TB_DOCUMENTO d on d.id_documento =hd.pid_documento
 JOIN WISGCICATU_PRD.TB_EMPRESA E ON E.ID=d.PID_EMPRESA  
 where e.id=4
 order by hd.id
-FROM WISGCICATU_PRD.TB_TIPO_DOCUMENTO
 .
 spool Insert_TB_HISTORICO_DOCUMENTO.sql
 /
 spool off;
 
 -- 20 - POPULA - TB_HISTORICO_DOC_CORRETOR
-SELECT 'INSERT INTO tb_historico_doc_corretor (    id,    pid_documento,    dt_alteracao,    pid_usuario_anterior,    pid_usuario_atual,    pid_corretor_anterior,    pid_corretor_atual) 
-VALUES (     '||hdc.id||' , 
-'||DECODE(hdc.pid_documento, NULL, 'NULL',  hdc.pid_documento )||'    ,
-'||DECODE(hdc.dt_alteracao, NULL, 'NULL', ''''||hdc.dt_alteracao||'''')||' ,    
-NULL        ,
-NULL        ,
-'||DECODE(hdc.pid_corretor_anterior, NULL, 'NULL',  hdc.pid_corretor_anterior )||'    ,
-'||DECODE(hdc.pid_corretor_atual, NULL, 'NULL',  hdc.pid_corretor_atual )||'    
-);'
+SELECT 'INSERT INTO tb_historico_doc_corretor (    id,    pid_documento,    dt_alteracao,    pid_usuario_anterior,    pid_usuario_atual,    pid_corretor_anterior,    pid_corretor_atual) VALUES (     '||hdc.id||' , '||DECODE(hdc.pid_documento, NULL, 'NULL',  hdc.pid_documento )||'    , '||
+        DECODE(hdc.dt_alteracao, NULL, 'NULL', ''''||hdc.dt_alteracao||'''')||' ,    NULL        , NULL        , '||
+        DECODE(hdc.pid_corretor_anterior, NULL, 'NULL',  hdc.pid_corretor_anterior )||'    , '||
+        DECODE(hdc.pid_corretor_atual, NULL, 'NULL',  hdc.pid_corretor_atual )||'    );'
 from WISGCICATU_PRD.TB_HISTORICO_DOC_CORRETOR hdc
 join WISGCICATU_PRD.TB_DOCUMENTO d on d.id_documento =hdc.pid_documento
 JOIN WISGCICATU_PRD.TB_EMPRESA E ON E.ID=d.PID_EMPRESA  
@@ -657,4 +609,4 @@ where e.id=4
 spool Insert_tb_num_documento_seg.sql
 /
 spool off;
-
+exit
