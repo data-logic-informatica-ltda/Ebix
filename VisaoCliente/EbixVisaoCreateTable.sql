@@ -1267,6 +1267,14 @@ GRANT SELECT ON "DB_EXCHANGE_VISAO_TST"."TB_LAYOUT_EMAIL" TO "CS_EXCHANGE_VISAO_
 
 prompt "Fim do Script CreateTable"
 
+prompt "Alteração das Colunas de Tabelas" 
+
+alter table TB_GRUPO_FUNCIONALIDADE modify(PID_GRUPO number, PID_FUNCIONALIDADE number);
+alter table TB_PROPOSTA_FUNDO_INVESTIMENTO modify(PID_DOCUMENTO_PREVIDENCIA number);
+alter table TB_ARQ_STATUS_CARGA modify(ID number);
+alter table TB_DOCUMENTO_PREVIDENCIA modify(PID_DOCUMENTO_PREVIDENCIA number);
+alter table TB_ARQ_ALIQ modify(PID_ARQ_STATUS_CARGA number);
+
 prompt "Carga Dados Tabelas NOVAS" 
 
 REM INSERTING into DB_EXCHANGE_VISAO_DSV.TB_DE_PARA_HISTORICO
