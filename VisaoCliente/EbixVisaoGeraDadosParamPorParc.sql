@@ -159,7 +159,7 @@ spool off;
 
 -- 08 - POPULA - TB_USUARIO
 set long 32767 
-SELECT ' INSERT INTO tb_usuario (    ID,    pid_empresa,    login_usuario,    ds_senha,    fl_primeiro_acesso,    nu_erros_acesso,    fl_bloqueado,    fl_ativo,    ds_email,    pid_perfil,    nu_cpf_cnpj,    dt_cadastro,    nm_usuario,    pid_estrutura_venda,    pid_grupo,    pid_visao,    fl_visao_logada) 
+SELECT distinct 'INSERT INTO tb_usuario (    ID,    pid_empresa,    login_usuario,    ds_senha,    fl_primeiro_acesso,    nu_erros_acesso,    fl_bloqueado,    fl_ativo,    ds_email,    pid_perfil,    nu_cpf_cnpj,    dt_cadastro,    nm_usuario,    pid_estrutura_venda,    pid_grupo,    pid_visao,    fl_visao_logada) 
  VALUES (    
     '||U.ID||',
     '||DECODE(U.PID_EMPRESA, NULL, 'NULL', U.PID_EMPRESA)||'  ,   
@@ -218,7 +218,7 @@ spool Insert_TB_USUARIO_CANAL_VENDA.sql
 spool off;
 
 -- 10 - POPULA - TB_ENDERECO
-SELECT 'INSERT INTO tb_endereco (    id,    pid_tipo_endereco,    ds_endereco,    ds_complemento,    ds_bairro,    nu_cep,    pid_uf,    nm_cidade,    nu_endereco) VALUES (
+SELECT distinct 'INSERT INTO tb_endereco (    id,    pid_tipo_endereco,    ds_endereco,    ds_complemento,    ds_bairro,    nu_cep,    pid_uf,    nm_cidade,    nu_endereco) VALUES (
     '||EN.ID||',
     '||DECODE(EN.pid_tipo_endereco, NULL, 'NULL', EN.pid_tipo_endereco)||'  ,     
     '||DECODE(EN.ds_endereco, NULL, 'NULL', ''''||EN.ds_endereco||'''')||'  , 
@@ -239,7 +239,7 @@ spool Insert_TB_ENDERECO.sql
 spool off;
 
 -- 11 - POPULA - TB_CLIENTE
-SELECT 'INSERT INTO  tb_cliente (    id,    num_doc_identificacao,    dt_nascimento,    pid_estado_civil,    num_cpf,    pid_titularidade,    pid_documento_civil,    pid_orgao_emissor,    dt_expedicao,    pid_ocupacao,    fl_ppe,    ds_origem_recurso,    vl_renda_patrimonio,    pid_pais_nacionalidade,    pid_pais_outra_nacionalidade,    fl_esteve_eua,    num_ddd_residencial,    num_telefone_residencial,    ds_email,    nm_cliente,    pid_endereco,    pid_sexo,    num_ddd_celular,    num_telefone_celular,    pid_pais_endereco_postal,    ds_empresa) 
+SELECT distinct 'INSERT INTO  tb_cliente (    id,    num_doc_identificacao,    dt_nascimento,    pid_estado_civil,    num_cpf,    pid_titularidade,    pid_documento_civil,    pid_orgao_emissor,    dt_expedicao,    pid_ocupacao,    fl_ppe,    ds_origem_recurso,    vl_renda_patrimonio,    pid_pais_nacionalidade,    pid_pais_outra_nacionalidade,    fl_esteve_eua,    num_ddd_residencial,    num_telefone_residencial,    ds_email,    nm_cliente,    pid_endereco,    pid_sexo,    num_ddd_celular,    num_telefone_celular,    pid_pais_endereco_postal,    ds_empresa) 
     VALUES (    '||C.ID||',    
     '||DECODE(C.num_doc_identificacao, NULL, 'NULL', ''''||C.num_doc_identificacao||'''')||'  ,    
     '||DECODE(C.dt_nascimento, NULL, 'NULL', ''''||C.dt_nascimento||'''')||'  ,   
@@ -277,7 +277,7 @@ spool Insert_TB_CLIENTE.sql
 spool off;
 
 -- 12 - POPULA - TB_RESPONSAVEL_FINANCEIRO
-SELECT 'INSERT INTO tb_responsavel_financeiro (    id,    nome,    num_cpf,    pid_cliente,    dt_nascimento,    ds_email) VALUES (    '||R.ID||', '||
+SELECT distinct 'INSERT INTO tb_responsavel_financeiro (    id,    nome,    num_cpf,    pid_cliente,    dt_nascimento,    ds_email) VALUES (    '||R.ID||', '||
         DECODE(r.nome, NULL, 'NULL', ''''||r.nome||'''')||'  ,         '||DECODE(r.num_cpf, NULL, 'NULL', ''''||r.num_cpf||'''')||'  ,       '||
         DECODE(r.pid_cliente, NULL, 'NULL', r.pid_cliente)||'  ,      '||DECODE(r.dt_nascimento, NULL, 'NULL', ''''||r.dt_nascimento||'''')||'  ,         '||
         DECODE(r.ds_email, NULL, 'NULL', ''''||r.ds_email||'''')||'           );' 
@@ -292,7 +292,7 @@ spool Insert_TB_RESPONSAVEL_FINANCEIRO.sql
 spool off;
 
 -- 13 - POPULA - TB_RESPONSAVEL_LEGAL
-SELECT 'INSERT INTO tb_responsavel_legal (    id,    num_doc_identificacao,    pid_documento_civil,    ds_email,    pid_cliente,    nm_resp_legal,    num_cpf,    dt_nascimento,    nm_arquivo,    num_ddd_celular,    num_tel_celular) 
+SELECT distinct 'INSERT INTO tb_responsavel_legal (    id,    num_doc_identificacao,    pid_documento_civil,    ds_email,    pid_cliente,    nm_resp_legal,    num_cpf,    dt_nascimento,    nm_arquivo,    num_ddd_celular,    num_tel_celular) 
 VALUES (
 '||R.ID||',    
 '||DECODE(r.num_doc_identificacao, NULL, 'NULL', ''''||r.num_doc_identificacao||'''')||'  ,         
@@ -596,6 +596,31 @@ where e.id=4
 spool Insert_tb_codigo_acesso.sql
 /
 spool off;
+
+-- 27 - POPULA - TB_PORTABILIDADE_STATUS
+select distinct 'INSERT INTO  tb_portabilidade_status (    id,    dt_processamento,    pid_portabilidade,    dt_movimento,    ds_estagio,    ds_status,    ds_responsavel,    ds_motivo,    ds_observacao,    dt_inclusao)
+VALUES (
+    '||  ps.id||',  
+    '||DECODE(ps.dt_processamento, NULL, 'NULL', ''''||ps.dt_processamento||'''')||'  ,
+    '||DECODE( ps.pid_portabilidade, NULL, 'NULL',   ps.pid_portabilidade )||'      ,
+    '||DECODE(ps.dt_movimento, NULL, 'NULL', ''''||ps.dt_movimento||'''')||'  ,
+    '||DECODE(ps.ds_estagio, NULL, 'NULL', ''''||ps.ds_estagio||'''')||'  ,
+    '||DECODE(ps.ds_status, NULL, 'NULL', ''''||ps.ds_status||'''')||'  ,
+    '||DECODE(ps.ds_responsavel, NULL, 'NULL', ''''||ps.ds_responsavel||'''')||'   ,
+    '||DECODE(ps.ds_motivo, NULL, 'NULL', ''''||ps.ds_motivo||'''')||'  ,
+    '||DECODE(ps.ds_observacao, NULL, 'NULL', ''''||ps.ds_observacao||'''')||'  ,
+    '||DECODE(ps.dt_inclusao, NULL, 'NULL', ''''||ps.dt_inclusao||'''')||'   );'
+from WISGCICATU_PRD.TB_PORTABILIDADE_STATUS ps
+join WISGCICATU_PRD.TB_PORTABILIDADE p on  p.pid_documento_portabilidade = ps.pid_portabilidade
+join WISGCICATU_PRD.TB_DOCUMENTO_PREVIDENCIA dp on dp.pid_documento_previdencia=p.pid_documento_previdencia
+join WISGCICATU_PRD.tb_documento d on d.id_documento = dp.PID_DOCUMENTO_PREVIDENCIA 
+JOIN WISGCICATU_PRD.TB_EMPRESA E ON E.ID=d.PID_EMPRESA  
+where e.id=4
+.
+spool Insert_TB_PORTABILIDADE_STATUS
+/
+spool off;
+
 
 /* ESTA TABELA SERA CARREGADA COM O DUMP - TICKET 1900225
 
