@@ -65,7 +65,9 @@ commit;
 commit;
 @Insert_tb_codigo_acesso.sql
 commit;
+/*  ESTA TABELA SERA CARREGADA NO DUMP - TICKET 1900225
 @Insert_tb_num_documento_seg.sql
 commit;
+*/
 spool off
 exit

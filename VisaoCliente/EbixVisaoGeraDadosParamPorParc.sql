@@ -597,6 +597,8 @@ spool Insert_tb_codigo_acesso.sql
 /
 spool off;
 
+/* ESTA TABELA SERA CARREGADA COM O DUMP - TICKET 1900225
+
 -- 27 - POPULA - tb_num_documento_seg
 SELECT distinct 'INSERT INTO  tb_num_documento_seg (    num_documento_seg,    fl_assinada) 
  VALUES (  '||DECODE(ds.num_documento_seg, NULL, 'NULL', ''''||ds.num_documento_seg||'''')||'    ,
@@ -609,4 +611,5 @@ where e.id=4
 spool Insert_tb_num_documento_seg.sql
 /
 spool off;
+*/
 exit
