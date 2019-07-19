@@ -1,0 +1,35 @@
+### Roteiro dos Passos para a migracao do Visao
+### Esse roteiro foi baseado com os testes feitos no ambiente TST
+###
+
+
+export ORACLE_SID=RJINT
+-- Criação das tabelas
+sqlplus / as sysdba @EbixVisaoCreateTable.sql
+-- Geração Insert Tabelas de Domínio
+sqlplus EbixLA/"Ebx1562#Jan"@aws @EbixVisaoGeraDadosTabDominios.sql
+sqlplus EbixLA/"Ebx1562#Jan"@aws @EbixVisaoGeraDadosParamPorParc.sql
+
+exp EbixLA/"Ebx1562#Jan"@aws file=EXP_TAbelasGrandes.dmp tables=WISGCICATU_PRD.TB_NUM_DOCUMENTO_SEG,WISGCICATU_PRD.TB_ARQ_STATUS_CARGA_LOG,WISGCICATU_PRD.TB_ARQ_STATUS_CARGA,WISGCICATU_PRD.TB_ARQUIVO_PLAN,WISGCICATU_PRD.TB_ARQUIVO_COTA,WISGCICATU_PRD.TB_ARQUIVO_CADA,WISGCICATU_PRD.TB_ARQUIVO_MOVI statistics=none grants=n log=EXP_TAbelasGrandes.log buffer=400000
+
+Carga das linhas
+
+sqlplus / as sysdba @EbixVisaoCargaDadosTabDominios.sql
+sqlplus / as sysdba @EbixVisaoCargaDadosParamPorParc.sql
+
+
+impdp "'/ as sysdba'" directory=DATAPUMP_STAGE dumpfile=TB_LAYOUT_EMAIL.dmp tables=DB_EXCHANGE_VISAO_TST.TB_LAYOUT_EMAIL remap_schema=DB_EXCHANGE_VISAO_TST:RAQUEL logfile=impdp_TB_LAYOUT_EMAIL.log content=data_only
+
+imp "'/ as sysdba'" file=EXP_TAbelasGrandes.dmp fromuser=WISGCICATU_PRD touser=RAQUEL ignore=y rows=y indexes=n constraints=n statistics=none grants=no log=imp_tabelasgrandes2.log
+
+**** UPDATE NA TABELA DE TB_NUM_DOCUMENTO_SEG 
+
+update TB_NUM_DOCUMENTO_SEG set fl_assinada = 'S' where   num_documento_seg <=  60012964849;
+commit;
+
+
+sqlplus / as sysdba @EbixVisaoCreateIndexConstr.sql
+sqlplus / as sysdba @EbixVisaoCreateSequence.sql
+sqlplus / as sysdba @EbixVisaoCreateTriggers.sql
+sqlplus / as sysdba @EbixVisaoCreateViews.sql
+

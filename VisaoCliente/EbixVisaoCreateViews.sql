@@ -7,7 +7,7 @@
 /************************************
 *  INPUT PARAMETERS
 ************************************/
-DEFINE owner=DB_EXCHANGE_VISAO_TST
+DEFINE owner=
 
 alter session set current_schema = &owner;
 

@@ -4,8 +4,9 @@
 
 /************************************
 *  INPUT PARAMETERS
+*  DB_EXCHANGE_VISAO_TST
 ************************************/
-DEFINE owner=DB_EXCHANGE_VISAO_TST
+DEFINE owner=
 
 set timing on
 alter session set current_schema=&owner;
