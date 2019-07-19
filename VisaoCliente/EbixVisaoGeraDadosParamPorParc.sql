@@ -1,4 +1,4 @@
-set lines 900
+set lines 999
 set pages 0
 set head off
 
@@ -468,7 +468,7 @@ join WISGCICATU_PRD.tb_documento d on d.id_documento = dp.PID_DOCUMENTO_PREVIDEN
 JOIN WISGCICATU_PRD.TB_EMPRESA E ON E.ID=d.PID_EMPRESA  
 where e.id=4
 .
-spool Insert_TB_PORTABILIDADE_STATUS
+spool Insert_TB_PORTABILIDADE_STATUS.sql
 /
 spool off;
 

@@ -46,7 +46,7 @@ commit;
 commit;
 @Insert_TB_FUNDO.sql
 commit;
-@Insert_tb_fundo_investimento.sql
+@Insert_TB_FUNDO_INVESTIMENTO.sql
 commit;
 @Insert_TB_DOCUMENTO.sql
 commit;
