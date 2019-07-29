@@ -2,34 +2,50 @@
 ### Esse roteiro foi baseado com os testes feitos no ambiente TST
 ###
 
+ROTEIRO DE CARGA
 
 export ORACLE_SID=RJINT
 -- Criação das tabelas
 sqlplus / as sysdba @EbixVisaoCreateTable.sql
--- Geração Insert Tabelas de Domínio
-sqlplus EbixLA/"Ebx1562#Jan"@aws @EbixVisaoGeraDadosTabDominios.sql
-sqlplus EbixLA/"Ebx1562#Jan"@aws @EbixVisaoGeraDadosParamPorParc.sql
 
+-- Geração Insert
+-- Tabelas Grandes
 exp EbixLA/"Ebx1562#Jan"@aws file=EXP_TAbelasGrandes.dmp tables=WISGCICATU_PRD.TB_NUM_DOCUMENTO_SEG,WISGCICATU_PRD.TB_ARQ_STATUS_CARGA_LOG,WISGCICATU_PRD.TB_ARQ_STATUS_CARGA,WISGCICATU_PRD.TB_ARQUIVO_PLAN,WISGCICATU_PRD.TB_ARQUIVO_COTA,WISGCICATU_PRD.TB_ARQUIVO_CADA,WISGCICATU_PRD.TB_ARQUIVO_MOVI statistics=none grants=n log=EXP_TAbelasGrandes.log buffer=400000
 
-Carga das linhas
+-- Tabelas de Domínio
+sqlplus EbixLA/"Ebx1562#Jan"@aws @EbixVisaoGeraDadosTabDominios.sql
+
+-- Tabelas de Parceiros
+sqlplus EbixLA/"Ebx1562#Jan"@aws @EbixVisaoGeraDadosParamPorParc.sql
+
+
+-- Carga dos Dados
 
 sqlplus / as sysdba @EbixVisaoCargaDadosTabDominios.sql
 sqlplus / as sysdba @EbixVisaoCargaDadosParamPorParc.sql
 
+-- Importação da tabela de Layout
+impdp "'/ as sysdba'" directory=DATAPUMP_STAGE dumpfile=TB_LAYOUT_EMAIL.dmp tables=DB_EXCHANGE_VISAO_TST.TB_LAYOUT_EMAIL remap_schema=DB_EXCHANGE_VISAO_TST:DB_EXCHANGE_VISAO_TST logfile=impdp_TB_LAYOUT_EMAIL.log content=data_only
 
-impdp "'/ as sysdba'" directory=DATAPUMP_STAGE dumpfile=TB_LAYOUT_EMAIL.dmp tables=DB_EXCHANGE_VISAO_TST.TB_LAYOUT_EMAIL remap_schema=DB_EXCHANGE_VISAO_TST:RAQUEL logfile=impdp_TB_LAYOUT_EMAIL.log content=data_only
+-- Importação das Grandes Tabelas
 
-imp "'/ as sysdba'" file=EXP_TAbelasGrandes.dmp fromuser=WISGCICATU_PRD touser=RAQUEL ignore=y rows=y indexes=n constraints=n statistics=none grants=no log=imp_tabelasgrandes2.log
+imp "'/ as sysdba'" file=EXP_TAbelasGrandes.dmp fromuser=WISGCICATU_PRD touser=DB_EXCHANGE_VISAO_TST ignore=y rows=y indexes=n constraints=n statistics=none grants=no log=imp_tabelasgrandes.log
 
-**** UPDATE NA TABELA DE TB_NUM_DOCUMENTO_SEG 
+-- **** UPDATE NA TABELA DE TB_NUM_DOCUMENTO_SEG 
 
 update TB_NUM_DOCUMENTO_SEG set fl_assinada = 'S' where   num_documento_seg <=  60012964849;
 commit;
 
-
+-- Criação dos índices/constraints
 sqlplus / as sysdba @EbixVisaoCreateIndexConstr.sql
+
+-- Criação dos Sequences
 sqlplus / as sysdba @EbixVisaoCreateSequence.sql
+
+-- Criação das Triggers
 sqlplus / as sysdba @EbixVisaoCreateTriggers.sql
+
+-- Criação das Views
 sqlplus / as sysdba @EbixVisaoCreateViews.sql
+
 
