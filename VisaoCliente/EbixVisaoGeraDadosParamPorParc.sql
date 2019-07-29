@@ -238,37 +238,37 @@ spool Insert_TB_ENDERECO.sql
 spool off;
 
 -- 11 - POPULA - TB_CLIENTE
-SELECT distinct 'INSERT INTO  tb_cliente (    id,    num_doc_identificacao,    dt_nascimento,    pid_estado_civil,    num_cpf,    pid_titularidade,    pid_documento_civil,    pid_orgao_emissor,    dt_expedicao,    pid_ocupacao,    fl_ppe,    ds_origem_recurso,    vl_renda_patrimonio,    pid_pais_nacionalidade,    pid_pais_outra_nacionalidade,    fl_esteve_eua,    num_ddd_residencial,    num_telefone_residencial,    ds_email,    nm_cliente,    pid_endereco,    pid_sexo,    num_ddd_celular,    num_telefone_celular,    pid_pais_endereco_postal,    ds_empresa) 
-    VALUES (    '||C.ID||',    
-    '||DECODE(C.num_doc_identificacao, NULL, 'NULL', ''''||C.num_doc_identificacao||'''')||'  ,    
-    '||DECODE(C.dt_nascimento, NULL, 'NULL', ''''||C.dt_nascimento||'''')||'  ,   
-    '||DECODE(c.pid_estado_civil, NULL, 'NULL', c.pid_estado_civil)||'  ,     
-    '||DECODE(C.num_cpf, NULL, 'NULL', ''''||C.num_cpf||'''')||'  ,       
-    '||DECODE(c.pid_titularidade, NULL, 'NULL', c.pid_titularidade)||'  ,   
-    '||DECODE(c.pid_documento_civil, NULL, 'NULL', c.pid_documento_civil)||'  ,   
-    '||DECODE(c.pid_orgao_emissor, NULL, 'NULL', c.pid_orgao_emissor)||'  ,  
-    '||DECODE(C.dt_expedicao, NULL, 'NULL', ''''||C.dt_expedicao||'''')||'  ,   
-    '||DECODE(c.pid_ocupacao, NULL, 'NULL', c.pid_ocupacao)||'  ,      
-    '||DECODE(C.cd_ppe, NULL, 'N', ''''|| case when ( C.cd_ppe = '0') then 'N' else 'S' end ||'''')||'  ,     
-    '||DECODE(C.ds_origem_recurso, NULL, 'NULL', ''''||C.ds_origem_recurso||'''')||'  ,    
-    '||DECODE(C.vl_renda_patrimonio, NULL, 'NULL', ''''||C.vl_renda_patrimonio||'''')||'  ,    
-    '||DECODE(c.pid_pais_nacionalidade, NULL, 'NULL', c.pid_pais_nacionalidade)||'  ,   
-    '||DECODE(c.pid_pais_outra_nacionalidade, NULL, 'NULL', c.pid_pais_outra_nacionalidade)||'   ,
-    '||DECODE(C.cd_esteve_eua, NULL, 'NULL', ''''||C.cd_esteve_eua||'''')||'  ,     
-    '||DECODE(C.num_ddd_residencial, NULL, 'NULL', ''''||C.num_ddd_residencial||'''')||'  ,      
-    '||DECODE(C.num_telefone_residencial, NULL, 'NULL', ''''||C.num_telefone_residencial||'''')||'  ,     
-    '||DECODE(C.ds_email, NULL, 'NULL', ''''||C.ds_email||'''')||'  ,    
-    '||DECODE(C.nm_cliente, NULL, 'NULL', ''''||C.nm_cliente||'''')||'  ,   
-    '||DECODE(c.pid_endereco, NULL, 'NULL', c.pid_endereco)||'  ,   
-    '||DECODE(c.pid_sexo, NULL, 'NULL', c.pid_sexo)||'  ,  
-    '||DECODE(C.num_ddd_celular, NULL, 'NULL', ''''||C.num_ddd_celular||'''')||'  ,      
-    '||DECODE(C.num_telefone_celular, NULL, 'NULL', ''''||C.num_telefone_celular||'''')||'  ,   
-    '||DECODE(c.pid_pais_endereco_postal, NULL, 'NULL', c.pid_pais_endereco_postal)||'  ,  
-    '||DECODE(C.ds_empresa, NULL, 'NULL', ''''||C.ds_empresa||'''')||'        
-);' 
-from WISGCICATU_PRD.TB_CLIENTE c  
+SELECT distinct 'INSERT INTO  tb_cliente (id, num_doc_identificacao, dt_nascimento, pid_estado_civil, num_cpf, pid_titularidade, pid_documento_civil, pid_orgao_emissor, dt_expedicao, pid_ocupacao, fl_ppe, ds_origem_recurso, vl_renda_patrimonio, pid_pais_nacionalidade, pid_pais_outra_nacionalidade, fl_esteve_eua, num_ddd_residencial, num_telefone_residencial, ds_email, nm_cliente, pid_endereco, pid_sexo, num_ddd_celular, num_telefone_celular, pid_pais_endereco_postal, ds_empresa)    VALUES ('
+     ||C.ID||',
+    '||DECODE(C.num_doc_identificacao, NULL, 'NULL', ''''||C.num_doc_identificacao||'''')||',
+    '||DECODE(C.dt_nascimento, NULL, 'NULL', ''''||C.dt_nascimento||'''')||',
+    '||DECODE(c.pid_estado_civil, NULL, 'NULL', c.pid_estado_civil)||',
+    '||DECODE(C.num_cpf, NULL, 'NULL', ''''||C.num_cpf||'''')||',
+    '||DECODE(c.pid_titularidade, NULL, 'NULL', c.pid_titularidade)||',
+    '||DECODE(c.pid_documento_civil, NULL, 'NULL', c.pid_documento_civil)||',
+    '||DECODE(c.pid_orgao_emissor, NULL, 'NULL', c.pid_orgao_emissor)||',
+    '||DECODE(C.dt_expedicao, NULL, 'NULL', ''''||C.dt_expedicao||'''')||',
+    '||DECODE(c.pid_ocupacao, NULL, 'NULL', c.pid_ocupacao)||',
+    '||DECODE(C.cd_ppe, NULL, 'N', ''''|| case when ( C.cd_ppe = '0') then 'N' else 'S' end ||'''')||',
+    '||DECODE(C.ds_origem_recurso, NULL, 'NULL', ''''||C.ds_origem_recurso||'''')||'  ,
+    '||DECODE(C.vl_renda_patrimonio, NULL, 'NULL', ''''||C.vl_renda_patrimonio||'''')||',
+    '||DECODE(c.pid_pais_nacionalidade, NULL, 'NULL', c.pid_pais_nacionalidade)||',
+    '||DECODE(c.pid_pais_outra_nacionalidade, NULL, 'NULL', c.pid_pais_outra_nacionalidade)||',
+    '''||DECODE(NVL(C.cd_esteve_eua,2),1,'S',2,'N')||''',
+    '||DECODE(C.num_ddd_residencial, NULL, 'NULL', ''''||C.num_ddd_residencial||'''')||',
+    '||DECODE(C.num_telefone_residencial, NULL, 'NULL', ''''||C.num_telefone_residencial||'''')||',
+    '||DECODE(C.ds_email, NULL, 'NULL', ''''||C.ds_email||'''')||',
+    '||DECODE(C.nm_cliente, NULL, 'NULL', ''''||C.nm_cliente||'''')||',
+    '||DECODE(c.pid_endereco, NULL, 'NULL', c.pid_endereco)||',
+    '||DECODE(c.pid_sexo, NULL, 'NULL', c.pid_sexo)||',
+    '||DECODE(C.num_ddd_celular, NULL, 'NULL', ''''||C.num_ddd_celular||'''')||',
+    '||DECODE(C.num_telefone_celular, NULL, 'NULL', ''''||C.num_telefone_celular||'''')||',
+    '||DECODE(c.pid_pais_endereco_postal, NULL, 'NULL', c.pid_pais_endereco_postal)||',
+    '||DECODE(C.ds_empresa, NULL, 'NULL', ''''||C.ds_empresa||'''')||'
+);'
+from WISGCICATU_PRD.TB_CLIENTE c
 join WISGCICATU_PRD.tb_documento d on d.pid_cliente=c.id
-JOIN WISGCICATU_PRD.TB_EMPRESA E ON E.ID=d.PID_EMPRESA  
+JOIN WISGCICATU_PRD.TB_EMPRESA E ON E.ID=d.PID_EMPRESA
 where d.pid_empresa=4
 .
 spool Insert_TB_CLIENTE.sql
@@ -665,7 +665,7 @@ commit;
 
 -- POPULA - TB_INVESTIMENTO
 
-select distinct 'insert into TB_INVESTIMENTO (ID,PID_TIPO_INVESTIMENTO,PID_RISCO_PRE_FORMAT,PID_TIPO_RISCO,PID_PRODUTO,PID_EMPRESA,NM_INVESTIMENTO, CD_FUNDO_SEG,DS_RESUMO,FL_MAIOR_VENDA,FL_APORTE_OBRIG,FL_CONTRIB_OBRIG,FL_VISAO_CLIENTE,FL_ATIVO,VL_APORTE, VL_CONTRIBUICAO,COR)values( '
+select distinct 'insert into TB_INVESTIMENTO (ID,PID_TIPO_INVESTIMENTO,PID_RISCO_PRE_FORMAT,PID_TIPO_RISCO,PID_PRODUTO,PID_EMPRESA,NM_INVESTIMENTO, CD_FUNDO_SEG,DS_RESUMO,FL_MAIOR_VENDA,FL_APORTE_OBRIG,FL_CONTRIB_OBRIG,FL_VISAO_CLIENTE,FL_ATIVO,VL_CONTRIBUICAO,VL_APORTE,COR)values( '
 ||F.ID||', 1,  null, null, '||F.PID_PRODUTO ||', '||F.PID_EMPRESA||', '''||F.NM_FUNDO_REDUZIDO||''', '''
 ||F.CD_FUNDO_SEG||''', '''||TF.DetalhamentoFundo||''', null, '''||     case when ( tf.Aporte =  'n/a' ) then 'N' else 'S' end      ||''' , '''
 ||     case when ( tf.PorContribuicaoMensal =  'n/a' ) then 'N' else 'S' end      ||''' , ''S'', '''||F.FL_ATIVO||''', '
